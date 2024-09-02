@@ -86,7 +86,7 @@ export default function SignUp() {
           </span>
         </Link>
       </div>
-      <p className='text-red-700 mt-5'>{error && 'Something went wrong!'}</p>
+      <p className='text-red-700 mt-5'>{error && 'Username or Email Already Exist!'}</p>
     </div>
   )
 }
