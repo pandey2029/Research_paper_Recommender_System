@@ -46,6 +46,33 @@ def recommend_papers(doc_id, top_n=5):
 
     return recommended_abstracts
 
+
+def get_common_citation_ratio(original_doc_id, recommended_doc_id):
+    original_cited_papers = papers.loc[original_doc_id, 'citations']
+    recommended_cited_papers = papers.loc[recommended_doc_id, 'citations']
+    
+    if not recommended_cited_papers:
+        return 0
+    
+    common_with_rec = sum(1 for cited_id in recommended_cited_papers if cited_id in original_cited_papers)
+    total_rec_citations = len(recommended_cited_papers)
+    
+    return common_with_rec / total_rec_citations
+
+
+def add_recommended_to_citations(doc_id, recommendations, threshold=0.25):
+    updated = False
+    for idx, sim in recommendations:
+        common_ratio = get_common_citation_ratio(doc_id, idx)
+        
+        if common_ratio > threshold and idx not in papers.loc[doc_id, 'citations']:
+            papers.at[doc_id, 'citations'].append(idx)  # Add to original paper citations
+            updated = True
+    
+    if updated:
+        # Save the updated dataframe back to the file to persist the changes
+        papers.to_pickle('papers_updated.pkl')
+
 @app.route('/recommend', methods=['POST'])
 def recommend():
     data = request.json
@@ -58,11 +85,14 @@ def recommend():
 
     recommendations = recommend_papers(doc_id)
 
+    # Update citations if certain threshold criteria are met
+    add_recommended_to_citations(doc_id, recommendations)
+
     response = {
         "paper_title": papers.loc[doc_id, 'title'],
         "authors": papers.loc[doc_id, 'authors'],
         "abstract": papers.loc[doc_id, 'abstract'],
-        "recommendations": []
+        "recommendations": [],
     }
 
     for idx, sim in recommendations:
@@ -77,14 +107,3 @@ def recommend():
 
 if __name__ == '__main__':
     app.run(port=6000, debug=True)
-
-
-import os
-print("Current working directory:", os.getcwd())
-
-import os
-print("Files in directory:", os.listdir())
-
-
-
-
