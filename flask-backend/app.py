@@ -73,6 +73,8 @@ def add_recommended_to_citations(doc_id, recommendations, threshold=0.25):
         # Save the updated dataframe back to the file to persist the changes
         papers.to_pickle('papers_updated.pkl')
 
+
+
 @app.route('/recommend', methods=['POST'])
 def recommend():
     data = request.json
@@ -92,7 +94,7 @@ def recommend():
         "paper_title": papers.loc[doc_id, 'title'],
         "authors": papers.loc[doc_id, 'authors'],
         "abstract": papers.loc[doc_id, 'abstract'],
-        "recommendations": [],
+        "recommendations": []
     }
 
     for idx, sim in recommendations:
@@ -107,3 +109,14 @@ def recommend():
 
 if __name__ == '__main__':
     app.run(port=6000, debug=True)
+
+
+import os
+print("Current working directory:", os.getcwd())
+
+import os
+print("Files in directory:", os.listdir())
+
+
+
+
