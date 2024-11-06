@@ -60,12 +60,15 @@ def get_common_citation_ratio(original_doc_id, recommended_doc_id):
     return common_with_rec / total_rec_citations
 
 
-def add_recommended_to_citations(doc_id, recommendations, threshold=0.25):
+def add_recommended_to_citations(doc_id, recommendations, lower_threshold=0.25,upper_threshold=0.75):
     updated = False
     for idx, sim in recommendations:
         common_ratio = get_common_citation_ratio(doc_id, idx)
         
-        if common_ratio > threshold and idx not in papers.loc[doc_id, 'citations']:
+         if common_ratio < lower_threshold and idx not in papers.loc[doc_id, 'citations']:
+            papers.at[doc_id, 'citations'].append(idx)  # Add to original paper citations
+            updated = True
+        if common_ratio > upper_threshold and idx not in papers.loc[doc_id, 'citations']:
             papers.at[doc_id, 'citations'].append(idx)  # Add to original paper citations
             updated = True
     
