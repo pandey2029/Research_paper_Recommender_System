@@ -39,7 +39,7 @@ def recommend_papers(doc_id, top_n=5):
     else:
         citation_sims_dict = {k: 0 for k in citation_sims_dict}
 
-    combined_sims = {i: content_sims_dict.get(i, 0) * 0.5 + citation_sims_dict.get(i, 0) * 0.5 for i in range(len(papers))}
+    combined_sims = {i: content_sims_dict.get(i, 0) * 0.7 + citation_sims_dict.get(i, 0) * 0.3 for i in range(len(papers))}
 
     recommended_abstracts = sorted(combined_sims.items(), key=lambda item: item[1], reverse=True)
     recommended_abstracts = [(idx, sim) for idx, sim in recommended_abstracts if idx != doc_id][:top_n]
