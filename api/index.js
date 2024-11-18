@@ -77,7 +77,7 @@ app.get('/api/papers', async (req, res) => {
     const paperId = papers[0].paperId;
 
     // To get paper details
-    const detailsResponse = await axios.get(`https://api.semanticscholar.org/graph/v1/paper/${paperId}?fields=url,authors`, {
+    const detailsResponse = await axios.get(`https://api.semanticscholar.org/graph/v1/paper/${paperId}?fields=url,abstract,authors`, {
       headers: { 'x-api-key': process.env.S2_API_KEY }
     });
     const paperDetails = detailsResponse.data;
