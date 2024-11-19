@@ -98,46 +98,46 @@ def get_paper_from_semantic_scholar(paper_title):
 
 
 
-# def add_recommended_to_citations(doc_id, recommendations, lower_threshold=0.25, upper_threshold=0.75):
-#     updated = False
+def add_recommended_to_citations(doc_id, recommendations, lower_threshold=0.25, upper_threshold=0.75):
+    updated = False
     
-#     # Ensure single row is accessed, add a debug print
-#     if doc_id not in papers.index:
-#         print(f"Document ID {doc_id} not found in the index.")
-#         return
+    # Ensure single row is accessed, add a debug print
+    if doc_id not in papers.index:
+        print(f"Document ID {doc_id} not found in the index.")
+        return
 
-#     # Ensure the citations field is a list
-#     citations = papers.loc[doc_id, 'citations']
-#     print(f"Before conversion, citations for doc_id {doc_id}: {citations}, type: {type(citations)}")
+    # Ensure the citations field is a list
+    citations = papers.loc[doc_id, 'citations']
+    print(f"Before conversion, citations for doc_id {doc_id}: {citations}, type: {type(citations)}")
     
-#     # Convert citations to list if it's a string
-#     if isinstance(citations, str):
-#         try:
-#             citations = eval(citations)
-#         except Exception as e:
-#             print(f"Failed to evaluate citations for doc_id {doc_id}: {e}")
-#             return
+    # Convert citations to list if it's a string
+    if isinstance(citations, str):
+        try:
+            citations = eval(citations)
+        except Exception as e:
+            print(f"Failed to evaluate citations for doc_id {doc_id}: {e}")
+            return
     
-#     if not isinstance(citations, list):
-#         citations = []
+    if not isinstance(citations, list):
+        citations = []
 
-#     for idx, sim in recommendations:
-#         common_ratio = get_common_citation_ratio(doc_id, idx)
+    for idx, sim in recommendations:
+        common_ratio = get_common_citation_ratio(doc_id, idx)
         
-#         if common_ratio < lower_threshold and idx not in citations:
-#             citations.append(idx)
-#             updated = True
-#         if common_ratio > upper_threshold and idx not in citations:
-#             citations.append(idx)
-#             updated = True
+        if common_ratio < lower_threshold and idx not in citations:
+            citations.append(idx)
+            updated = True
+        if common_ratio > upper_threshold and idx not in citations:
+            citations.append(idx)
+            updated = True
 
-#     if updated:
-#         # Update the dataframe with the modified list
-#         papers.at[doc_id, 'citations'] = citations
-#         print(f"Updated citations for doc_id {doc_id}: {citations}")
+    if updated:
+        # Update the dataframe with the modified list
+        papers.at[doc_id, 'citations'] = citations
+        print(f"Updated citations for doc_id {doc_id}: {citations}")
 
-#         # Save the updated dataframe back to the file to persist the changes
-#         papers.to_pickle('papers_updated.pkl')
+        # Save the updated dataframe back to the file to persist the changes
+        papers.to_pickle('papers_updated.pkl')
 
 
 @app.route('/recommend', methods=['POST'])
