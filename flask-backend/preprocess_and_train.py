@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 import nltk
 import pickle
 
@@ -19,8 +20,14 @@ papers['abstract'] = papers['abstract'].fillna('')
 abstracts = papers['abstract'].tolist()
 paper_ids = papers['id'].tolist()
 
+# Preprocess with lemmatization
+def preprocess_text(text):
+    tokens = word_tokenize(text.lower())
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
+    return lemmatized_tokens
+
 # Preprocess and tag the documents for content-based filtering
-tagged_data = [TaggedDocument(words=word_tokenize(abstract.lower()), tags=[str(i)]) for i, abstract in enumerate(abstracts)]
+tagged_data = [TaggedDocument(words=preprocess_text(abstract), tags=[str(i)]) for i, abstract in enumerate(abstracts)]
 
 # Train the Doc2Vec model
 model = Doc2Vec(vector_size=50, alpha=0.025, min_alpha=0.00025, min_count=1, dm=1, epochs=100)
