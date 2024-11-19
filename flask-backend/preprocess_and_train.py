@@ -41,7 +41,7 @@ for i, paper in papers.iterrows():
     for citation in paper['citations']:
         if citation in paper_ids:
             citation_index = paper_ids.index(citation)
-            citation_matrix[i, citation_index] = 1
+            citation_matrix[citation_index,i] = 1
 
 # Compute cosine similarity for citation-based filtering
 citation_similarity = cosine_similarity(citation_matrix)
